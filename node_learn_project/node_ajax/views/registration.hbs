@@ -1,0 +1,36 @@
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Document</title>
+</head>
+
+<body>
+  <div id="div">
+
+  </div>
+  <button id="submit">Submit</button>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+    integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous">
+    </script>
+  <script>
+    $(document).ready(function () {
+      $('#submit').on('click', function () {
+        $.ajax({
+          url: '/registration',
+          method: 'post',
+          data: { data: 'fetch' },
+          datatype: 'html',
+          success: function (data) {
+            console.log(data)
+            $('#div').html(data.data)
+          }
+        })
+      })
+
+    })
+  </script>
+</body>
+
+</html>

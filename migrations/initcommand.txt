@@ -1,0 +1,9 @@
+1. install sequelize cli -> npm i --save-dev sequelize-cli
+2. npm install --save sequelize
+3. npx sequelize-cli init
+4. create table via migration -> npx sequelize-cli model:generate --name Users --attributes name:string,email:string
+5. make migrate -> npx sequelize-cli db:migrate
+6. make rollback only last migration -> npm sequelize-cli db:migrate:undo
+7. make rollback all migration -> npm sequelize-cli db:migrate:undo:all
+8. make rollback via migration file name -> npx sequelize-cli db:migrate:undo --name 20230829152836-create-employes.js
+9. Check status of migration files -> npx- sequelize-cli db:migrate:status
