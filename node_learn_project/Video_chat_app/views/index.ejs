@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Index Page</title>
+    <script
+      src="https://cdn.socket.io/4.6.0/socket.io.min.js"
+      integrity="sha384-c79GN5VsunZvi+Q/WObgk2in0CbZsHnjEqvFxC5DxHn9lTfNce2WW6h2pH6u/kF+"
+      crossorigin="anonymous"
+    ></script>
+  </head>
+
+  <body>
+    <div id="video-chat-form">
+      <h2>View Chat App</h2>
+      <input type="text" id="roomName" placeholder="Room Name" />
+      <button id="join">Join</button>
+    </div>
+    <div class="video-chat-room">
+      <video id="user-video"></video>
+      <video id="peer-video"></video>
+    </div>
+    <div class="audio-room">
+      <audio id="audioElement" controls></audio>
+    </div>
+    <script src="js/script.js"></script>
+  </body>
+</html>
