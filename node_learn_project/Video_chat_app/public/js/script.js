@@ -1,4 +1,4 @@
-var socket = io.connect("")
+var socket = io.connect("https://requirement-original-combat-oven.trycloudflare.com")
 var videoChatForm = document.getElementById("video-chat-form");
 var videoChatRooms = document.getElementById("video-chat-room");
 var joinBtn = document.getElementById("join");
@@ -13,17 +13,18 @@ var userStream;
 var iceServers = {
     iceServers: [
         { urls: "stun:stun.services.mozilla.com", },
-        { urls: "stun1.l.google.com:19302" }
+        { urls: "stun:stun1.l.google.com:19302" }
     ]
 }
 joinBtn.addEventListener("click", function () {
-    if (roomName == "") {
-        alert("Please Enter Room Name");
-    }
-    else {
-        socket.emit("join", roomName);
+    // if (roomName === "") {
+    //     alert("Please Enter Room Name");
+    // }
+    // else {
+    //     socket.emit("join", roomName);
 
-    }
+    // }
+    socket.emit("join", roomName);
 });
 
 socket.on('created', function () {
@@ -89,17 +90,44 @@ socket.on('ready', function () {
         rtcpeerconnections = new RTCPeerConnection(iceServers);
         rtcpeerconnections.onicecandidate = OnIcreCandidateFunction;
         rtcpeerconnections.ontrack = OnTrackFunction;
-        rtcpeerconnections.addTrack(userStream.getTracks()[0], userStream.getTracks()[1]); //1 for audio 2 for video
+        rtcpeerconnections.addTrack(userStream.getTracks()[0]); //1 for audio 2 for video
+        rtcpeerconnections.addTrack(userStream.getTracks()[1]); //1 for audio 2 for video
+        rtcpeerconnections.createOffer(
+            function (offer) {
+                rtcpeerconnections.setLocalDescription(offer);
+                socket.emit("offer", offer, roomName);
+            },
+            function (error) {
+                console.log(error);
+            }
+        );
     }
 });
-socket.on('candidate', function () {
-
+socket.on('candidate', function (candidate) {
+    var iceCandidate = new RTCIceCandidate(candidate);
+    rtcpeerconnections.addIceCandidate(iceCandidate);
 })
-socket.on('offer', function () {
-
+socket.on('offer', function (offer) {
+    if (!creator) {
+        rtcpeerconnections = new RTCPeerConnection(iceServers);
+        rtcpeerconnections.onicecandidate = OnIcreCandidateFunction;
+        rtcpeerconnections.ontrack = OnTrackFunction;
+        rtcpeerconnections.addTrack(userStream.getTracks()[0]); //1 for audio 2 for video
+        rtcpeerconnections.addTrack(userStream.getTracks()[1]); //1 for audio 2 for video
+        rtcpeerconnections.setRemoteDescription(offer);
+        rtcpeerconnections.createAnswer(
+            function (answer) {
+                rtcpeerconnections.setLocalDescription(answer);
+                socket.emit("answer", answer, roomName);
+            },
+            function (error) {
+                console.log(error);
+            }
+        );
+    }
 })
-socket.on('answer', function () {
-
+socket.on('answer', function (answer) {
+    rtcpeerconnections.setRemoteDescription(answer);
 })
 // swipe candidate here 
 function OnIcreCandidateFunction(event) {
