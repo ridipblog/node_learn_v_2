@@ -39,6 +39,13 @@ Object.keys(db).forEach(modelName => {
 
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
+// One To One Relation
 db.students = require('./stduents')(sequelize, Sequelize.DataTypes);
 db.student_banks = require('./studentbank')(sequelize, Sequelize.DataTypes);
+db.student_educations = require('./studenteducation')(sequelize, Sequelize.DataTypes);
+
+db.students.hasOne(db.student_banks, { foreignKey: "student_id", as: "student_bank_details" });
+db.students.hasMany(db.student_educations, { foreignKey: "student_id", as: "student_education_details" });
+db.student_banks.belongsTo(db.students, { foreignKey: "student_id", as: "student_bank_details" });
+db.student_educations.belongsTo(db.students, { foreignKey: "student_id", as: "student_education_details" });
 module.exports = db;
