@@ -116,4 +116,32 @@ app.get('/send_mail_view', async (req, res) => {
     });
     res.send("Sent");
 })
+
+app.get('/send_email_secure', async (req, res) => {
+    let mailTransporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+            user: 'memorytemp5@gmail.com',
+            pass: 'dlkxgwyypbbupzus'
+        },
+        secure: true,
+        tls: {
+            ciphers: 'SSLv3', // Adjust the cipher according to your needs
+        },
+    });
+    let mailDetails = {
+        from: 'memorytemp5@gmail.com',
+        to: 'ridipgoswami43@gmail.com',
+        subject: 'Test Mail',
+        text: "Node js esting Mail"
+    }
+    mailTransporter.sendMail(mailDetails, function (err, data) {
+        if (err) {
+            console.log(err);
+        } else {
+            console.log("Sent");
+        }
+    })
+    res.send("Mail Send");
+});
 app.listen(3000)
