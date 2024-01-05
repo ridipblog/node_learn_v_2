@@ -18,11 +18,11 @@ module.exports = (sequelize, DataTypes) => {
             type: String,
             allowNull: false
         },
-        district_code: {
+        district_id: {
             type: INTEGER,
             allowNull: false
         },
-        block_code: {
+        block_id: {
             type: STRING,
             allowNull: false
         }

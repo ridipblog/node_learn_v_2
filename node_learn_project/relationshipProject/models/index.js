@@ -59,9 +59,9 @@ db.students.hasMany(db.student_educations, { foreignKey: "student_id", as: "stud
 db.student_banks.belongsTo(db.students, { foreignKey: "student_id", as: "studentData" });
 db.student_educations.belongsTo(db.students, { foreignKey: "student_id", as: "studentData" });
 // ---------------------Notification Relationship --------------------
-db.districts.hasMany(db.notifications, { foreignKey: "district_code", sourceKey: "district_code", as: "notifications" });
-db.blocks.hasMany(db.notifications, { foreignKey: "block_code", sourceKey: "block_code", as: "notifications" });
-db.notifications.belongsTo(db.districts, { foreignKey: "district_code", targetKey: "district_code", as: "districtTable" });
-db.notifications.belongsTo(db.blocks, { foreignKey: "block_code", targetKey: "block_code", as: "blockTable" });
+db.districts.hasMany(db.notifications, { foreignKey: "district_id", sourceKey: "district_code", as: "notifications" });
+db.blocks.hasMany(db.notifications, { foreignKey: "block_id", sourceKey: "block_code", as: "notifications" });
+db.notifications.belongsTo(db.districts, { foreignKey: "district_id", targetKey: "district_code", as: "districtTable" });
+db.notifications.belongsTo(db.blocks, { foreignKey: "block_id", targetKey: "block_code", as: "blockTable" });
 
 module.exports = db;

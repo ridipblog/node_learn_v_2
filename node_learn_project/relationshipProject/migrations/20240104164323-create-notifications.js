@@ -13,11 +13,11 @@ module.exports = {
                 type: Sequelize.STRING,
                 allowNull: false
             },
-            district_code: {
+            district_id: {
                 type: Sequelize.INTEGER,
                 allowNull: false
             },
-            block_code: {
+            block_id: {
                 type: Sequelize.STRING,
                 allowNull: false
             },

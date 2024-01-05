@@ -5,4 +5,5 @@ const NotificationController = require('../controllers/NotificationController');
 router.get('/notification-add-data', NotificationController.addTempData);
 router.get('/all-notify', NotificationController.getAllNotification);
 router.get('/get-specific-data', NotificationController.getSpecifcNotfification);
+router.get('/get-notify-district-block', NotificationController.getDistrictBlockNotify);
 module.exports = router;

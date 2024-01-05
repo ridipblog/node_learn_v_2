@@ -7,11 +7,11 @@ const addTempData = async (req, res) => {
     const t = await db.sequelize.transaction()
     var check = false;
     try {
-        const save_notification = await NotificationModel.create(
+        const save_notify = await NotificationModel.create(
             {
-                subject: "notification 6",
-                district_code: 124,
-                block_code: 13
+                subject: "Notification 6",
+                district_id: 999,
+                block_id: 999
             },
             {
                 transaction: t
@@ -71,13 +71,13 @@ const getSpecifcNotfification = async (req, res) => {
             where: {
                 [Op.or]: [
                     {
-                        district_code: {
-                            [Op.eq]: 124
+                        district_id: {
+                            [Op.eq]: 120
                         },
 
                     },
                     {
-                        district_code: {
+                        district_id: {
                             [Op.eq]: 999
                         }
                     }
@@ -87,8 +87,57 @@ const getSpecifcNotfification = async (req, res) => {
     )
     await res.status(200).json(notify_data);
 }
+const getDistrictBlockNotify = async (req, res) => {
+    const notify_data = await NotificationModel.findAll(
+        {
+            include: [
+                {
+                    model: DistrictModel,
+                    as: "districtTable",
+                    attributes: [
+                        'district_name'
+                    ]
+                },
+                {
+                    model: BlockModel,
+                    as: "blockTable",
+                    attributes: [
+                        'block_name'
+                    ]
+                }
+            ],
+            where: {
+                [Op.or]: [
+                    {
+                        district_id: {
+                            [Op.eq]: 120
+                        }
+                    },
+                    {
+                        district_id: {
+                            [Op.eq]: 999
+                        }
+                    }
+                ],
+                [Op.or]: [
+                    {
+                        block_id: {
+                            [Op.eq]: "1230"
+                        }
+                    }, {
+                        block_id: {
+                            [Op.eq]: "999"
+                        }
+                    }
+                ]
+            }
+        }
+    );
+    res.status(200).json(notify_data);
+}
 module.exports = {
     addTempData,
     getAllNotification,
-    getSpecifcNotfification
+    getSpecifcNotfification,
+    getDistrictBlockNotify
 }
