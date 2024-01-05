@@ -44,8 +44,24 @@ db.students = require('./stduents')(sequelize, Sequelize.DataTypes);
 db.student_banks = require('./studentbank')(sequelize, Sequelize.DataTypes);
 db.student_educations = require('./studenteducation')(sequelize, Sequelize.DataTypes);
 
+// -----------------Notification relations ----------------------
+db.districts = require('./districts')(sequelize, Sequelize.DataTypes);
+db.blocks = require('./blocks')(sequelize, Sequelize.DataTypes);
+db.notifications = require('./notifications')(sequelize, Sequelize.DataTypes);
+
+// db.students.hasOne(db.student_banks, { foreignKey: "student_id", as: "student_bank_details" });
+// db.students.hasMany(db.student_educations, { foreignKey: "student_id", as: "student_education_details" });
+// db.student_banks.belongsTo(db.students, { foreignKey: "student_id", as: "student_bank_details" });
+// db.student_educations.belongsTo(db.students, { foreignKey: "student_id", as: "student_education_details" });
+
 db.students.hasOne(db.student_banks, { foreignKey: "student_id", as: "student_bank_details" });
 db.students.hasMany(db.student_educations, { foreignKey: "student_id", as: "student_education_details" });
-db.student_banks.belongsTo(db.students, { foreignKey: "student_id", as: "student_bank_details" });
-db.student_educations.belongsTo(db.students, { foreignKey: "student_id", as: "student_education_details" });
+db.student_banks.belongsTo(db.students, { foreignKey: "student_id", as: "studentData" });
+db.student_educations.belongsTo(db.students, { foreignKey: "student_id", as: "studentData" });
+// ---------------------Notification Relationship --------------------
+db.districts.hasMany(db.notifications, { foreignKey: "district_code", sourceKey: "district_code", as: "notifications" });
+db.blocks.hasMany(db.notifications, { foreignKey: "block_code", sourceKey: "block_code", as: "notifications" });
+db.notifications.belongsTo(db.districts, { foreignKey: "district_code", targetKey: "district_code", as: "districtTable" });
+db.notifications.belongsTo(db.blocks, { foreignKey: "block_code", targetKey: "block_code", as: "blockTable" });
+
 module.exports = db;

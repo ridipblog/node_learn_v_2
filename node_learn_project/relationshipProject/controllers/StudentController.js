@@ -1,8 +1,10 @@
 const { Op } = require('sequelize');
 const db = require('../models/index');
+
 const StudentModel = db.students;
 const StudentBankModel = db.student_banks;
 const StudentEducationModel = db.student_educations;
+
 // Add A Student Data
 const addData = async (req, res) => {
     var check = false;
