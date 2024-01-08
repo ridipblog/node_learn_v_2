@@ -1,0 +1,11 @@
+1. npm install knex
+2. npm install mysql2
+3. create migration files ----------------------
+    a. npx knex migrate:make test
+4. migrate migration file------------------------
+    a. npx knex migrate:latest
+5. rollback all migrated tables------------------
+    a. npx knex migrate:rollback --all
+6. rollback one migrated table -----------------
+    a. npx knex migrate:rollback
+7.
