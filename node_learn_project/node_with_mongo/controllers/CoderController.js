@@ -19,34 +19,86 @@ const addCoderWithTransaction = async (req, res) => {
     var data;
     const session = await db.mongoose.startSession();
     try {
-        await session.withTransaction(async () => {
-            const save_coder = new CoderModel({
-                name: "coder 16",
-                email: "coder16@gmail.com"
-            });
-            const save_coder_1 = new CoderModel({
-                name: "coder 17",
-                email: "coder17@gmail.com"
-            });
-            await save_coder.save();
-            await save_coder_1.save();
-
+        await session.startTransaction();
+        const save_coder = new CoderModel({
+            name: "coder 26",
+            email: "coder26@gmail.com"
         });
-        // await session.commitTransaction();
+        const save_coder_1 = new CoderModel({
+            name: "coder 27",
+            email: "coder27@gmail.com"
+        });
+        await save_coder.save({ session });
+        await save_coder_1.save({ session });
+        await session.commitTransaction();
         data = true;
     } catch (error) {
-        console.error('Transaction error:', error);
-        try {
-            // Attempt to abort the transaction
-            await session.abortTransaction();
-        } catch (abortError) {
-            console.error('Abort transaction error:', abortError);
-        }
+        console.error('Transaction error:');
+        await session.abortTransaction();
         data = false;
+    } finally {
+        session.endSession();
     }
     res.status(200).json({ message: data });
 }
+// Find all coders data
+const findAllCoderData = async (req, res) => {
+    var data;
+    try {
+        // data = await  CoderModel.find().select('name email pri_id');
+        data = await CoderModel.find().select('name email pri_id').exec();
+    } catch (error) {
+        data = false;
+    }
+    res.status(200).json({
+        message: data
+    });
+}
+// Find specfic user data
+const findOneCoder = async (req, res) => {
+    var data;
+    try {
+        // 1st Type of Query Execution
+        data = await CoderModel.findOne({ name: 'coder 26' })
+            .select('name').exec();
+
+        // 2nd Type of Query Execution
+        data = await CoderModel.findOne({ name: 'coder 27' })
+            .select('email');
+
+        // 3rd Type of Query Execution
+        data = await CoderModel.findOne({
+            name: 'coder 26'
+        }).where(
+            'name'
+        ).equals(
+            'coder 26'
+        ).select(
+            'name email',
+        );
+
+        // 4rd Type of Query Execution
+        data = await CoderModel.find({
+            $or: [
+                {
+                    name: 'coder 27',
+                },
+                {
+                    email: 'coder26@gmail.com'
+                    // email: { $ne: 'coder26@gmail.com' } not equals to
+                }
+            ],
+        })
+    } catch (error) {
+        data = false;
+    }
+    res.status(200).json({
+        message: data
+    })
+}
 module.exports = {
     addCoder,
-    addCoderWithTransaction
+    addCoderWithTransaction,
+    findAllCoderData,
+    findOneCoder
 }
