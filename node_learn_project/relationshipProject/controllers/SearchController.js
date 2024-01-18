@@ -1,5 +1,6 @@
 const { Op, where } = require('sequelize');
 const db = require('../models/index');
+const knex = require('../config/knex');
 const WebDeveloperModel = db.web_developers;
 const DesignationsModel = db.designations;
 const addData = async (req, res) => {
@@ -67,7 +68,29 @@ const onInputSearchFrist = async (req, res) => {
         message: data
     })
 }
+// Search on input By Knex
+const onInputSearchSecond = async (req, res) => {
+    var data;
+    var search_query = req.body.search_query;
+    try {
+        data = await knex.table('webdevelopers as web_dev')
+            .orWhere('web_dev.name', 'like', `%${search_query}%`)
+            .orWhere('web_dev.email', 'like', `%${search_query}%`)
+            .orWhere('desig.designation_name', 'like', `%${search_query}%`)
+            .leftJoin('designations as desig', 'desig.id', '=','web_dev.designation')
+            .select(
+                'web_dev.*',
+                'desig.designation_name'
+            )
+    } catch (err) {
+        data = err;
+    }
+    return await res.status(200).json({
+        message: data
+    });
+}
 module.exports = {
     addData,
-    onInputSearchFrist
+    onInputSearchFrist,
+    onInputSearchSecond
 }
