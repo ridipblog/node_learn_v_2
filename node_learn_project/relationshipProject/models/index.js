@@ -49,6 +49,7 @@ db.districts = require('./districts')(sequelize, Sequelize.DataTypes);
 db.blocks = require('./blocks')(sequelize, Sequelize.DataTypes);
 db.notifications = require('./notifications')(sequelize, Sequelize.DataTypes);
 
+
 // db.students.hasOne(db.student_banks, { foreignKey: "student_id", as: "student_bank_details" });
 // db.students.hasMany(db.student_educations, { foreignKey: "student_id", as: "student_education_details" });
 // db.student_banks.belongsTo(db.students, { foreignKey: "student_id", as: "student_bank_details" });
@@ -64,4 +65,10 @@ db.blocks.hasMany(db.notifications, { foreignKey: "block_id", sourceKey: "block_
 db.notifications.belongsTo(db.districts, { foreignKey: "district_id", targetKey: "district_code", as: "districtTable" });
 db.notifications.belongsTo(db.blocks, { foreignKey: "block_id", targetKey: "block_code", as: "blockTable" });
 
+// ----------------------------Search Functions ---------------------------
+
+db.web_developers = require('./webdevelopers')(sequelize, Sequelize.DataTypes);
+db.designations = require('./designations')(sequelize, Sequelize.DataTypes);
+// db.designations.hasMany(db.web_developers, { foreignKey: "designation", sourceKey: "id", as: "webdevelopers" });
+db.web_developers.belongsTo(db.designations, { foreignKey: "designation", targetKey: "id", as: "desig_table" })
 module.exports = db;
