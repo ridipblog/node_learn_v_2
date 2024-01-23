@@ -5,4 +5,6 @@ const db = {};
 db.mongoose = mongoose;
 db.url = config.url;
 db.coders = require('./coderModel');
+db.authors = require('./authorModel');
+db.books = require('./bookModel');
 module.exports = db;

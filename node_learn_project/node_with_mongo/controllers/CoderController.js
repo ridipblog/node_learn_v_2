@@ -21,12 +21,12 @@ const addCoderWithTransaction = async (req, res) => {
     try {
         await session.startTransaction();
         const save_coder = new CoderModel({
-            name: "coder 26",
-            email: "coder26@gmail.com"
+            name: "coder 5",
+            email: "coder5@gmail.com"
         });
         const save_coder_1 = new CoderModel({
-            name: "coder 27",
-            email: "coder27@gmail.com"
+            name: "coder 6",
+            email: "coder6@gmail.com"
         });
         await save_coder.save({ session });
         await save_coder_1.save({ session });
@@ -81,24 +81,91 @@ const findOneCoder = async (req, res) => {
         data = await CoderModel.find({
             $or: [
                 {
-                    name: 'coder 27',
+                    name: 'coder 2',
                 },
                 {
-                    email: 'coder26@gmail.com'
+                    email: 'coder12@gmail.com'
                     // email: { $ne: 'coder26@gmail.com' } not equals to
                 }
             ],
-        })
+        });
     } catch (error) {
         data = false;
     }
     res.status(200).json({
         message: data
-    })
+    });
+}
+const findOneCoder2 = async (req, res) => {
+    var data;
+    try {
+        // ----------------frist method ----------------------
+        data = await CoderModel.findOne({
+            name: "coder 2",
+            email: "coder1@gmail.com"
+        });
+        // --------------- second method -----------------
+        data = await CoderModel.findOne({
+            $and: [
+                {
+                    name: 'coder 1'
+                },
+                {
+                    email: 'coder1@gmail.com'
+                }
+            ]
+        });
+        // ----------------- thrid method -------------------
+        data = await CoderModel.findOne({
+            $and: [
+                {
+                    $or: [
+                        {
+                            name: 'coder '
+                        },
+                        {
+                            name: 'coder 2'
+                        }
+                    ]
+                },
+                {
+                    $or: [
+                        {
+                            email: 'coder@gmail.com'
+                        },
+                        {
+                            email: 'coder2@gmail.com'
+                        }
+                    ]
+                }
+            ]
+        });
+    } catch (error) {
+        data = error;
+    }
+    return res.status(200).json({ data: data });
+}
+const deleteAllCoders = async (req, res) => {
+    const session = await db.mongoose.startSession();
+    var check;
+    try {
+        await session.startTransaction();
+        const del_all_coders = await CoderModel.deleteMany({}, { session });
+        await session.commitTransaction();
+        check = true;
+    } catch (error) {
+        await session.abortTransaction();
+        check = false;
+    }
+    return res.status(200).json({
+        check: check
+    });
 }
 module.exports = {
     addCoder,
     addCoderWithTransaction,
     findAllCoderData,
-    findOneCoder
+    findOneCoder,
+    findOneCoder2,
+    deleteAllCoders
 }
