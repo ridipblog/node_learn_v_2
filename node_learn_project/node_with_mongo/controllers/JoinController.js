@@ -50,10 +50,24 @@ const findOneAuthor = async (req, res) => {
     var data;
     try {
 
-        // --- get specific author data with book data using mongoose--------
-        data = await AuthorModel.findOne({
-            name: 'author 1'
-        }).populate('books');
+        // --- frist method to getspecifc data with book
+        data = await AuthorModel.aggregate([
+
+            {
+                $match: { name: 'author 2' }
+            },
+            {
+                $lookup: {
+                    from: 'books',
+                    localField: '_id',
+                    foreignField: 'authors',
+                    as: 'books'
+                }
+            }
+        ]);
+        // // --- second method get specific author data with book data using mongoose--------
+        data = await AuthorModel.findOne({ name: 'author 1' });
+        data = await BookModel.findOne({ authors: data._id }).populate('authors');
 
     } catch (error) {
         data = error;
